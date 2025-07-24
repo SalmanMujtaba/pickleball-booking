@@ -1,13 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, effect } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { User } from '../../common/interface';
+import { SharedService } from '../../common/shared-service';
 import { ViewName } from '../../common/types';
 
 @Component({
   selector: 'app-navigation',
   standalone: true,
   imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <nav class="bg-white shadow-sm border-b">
       <div class="max-w-6xl mx-auto px-4 py-4">
@@ -63,6 +65,12 @@ export class NavigationComponent {
   @Input() currentUser!: User;
   @Input() activeView!: ViewName;
   @Input() isAdmin!: boolean;
+  constructor(private sharedService: SharedService) {
+    effect(() => {
+      this.sharedService.currentUser();
+    });
+  }
+
   @Output() logout = new EventEmitter<void>();
   @Output() viewChange = new EventEmitter<ViewName>();
 }

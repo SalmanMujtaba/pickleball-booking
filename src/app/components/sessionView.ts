@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { COURT_ADDRESS } from '../../common/constants';
@@ -112,6 +112,17 @@ import { formatCourtNumbers } from '../../common/utilities';
   `
 })
 export class SessionViewComponent {
+  cdr = inject(ChangeDetectorRef);
+  constructor() {
+    effect(() => {
+      this.sharedService.waitlist();
+      this.sharedService.registrations();
+      // this.sharedService.sessionPosted();
+      // this.sharedService.userBanStatus();
+      // this.sharedService.currentUser();
+      // this.sharedService.sessionDate();
+    });
+  }
   Math = Math;
   COURT_ADDRESS = COURT_ADDRESS;
   formatCourtNumbers = formatCourtNumbers;
@@ -127,9 +138,12 @@ export class SessionViewComponent {
   }
 
   canPerformAction(): boolean {
-    return (!(!this.sharedService.sessionPosted() || this.sharedService.userBanStatus().isBanned) ||
-      this.sharedService.userRegistration() ||
-      this.sharedService.userOnWaitlist()) as boolean;
+    console.log((this.sharedService.userRegistration() ||
+      this.sharedService.userOnWaitlist() ||
+      (this.sharedService.sessionPosted() && !this.sharedService.userBanStatus().isBanned)));
+    return (this.sharedService.userRegistration() ||
+      this.sharedService.userOnWaitlist() ||
+      (this.sharedService.sessionPosted() && !this.sharedService.userBanStatus().isBanned)) as boolean;
   }
 
   getButtonColor(): string {
@@ -147,5 +161,7 @@ export class SessionViewComponent {
     } else if (this.sharedService.sessionPosted() && !this.sharedService.userBanStatus().isBanned) {
       this.sharedService.registerForSession();
     }
+    console.log('are we updating??', this.sharedService.registrations().length);
+    this.cdr.detectChanges();
   }
 }

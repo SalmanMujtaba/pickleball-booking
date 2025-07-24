@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { SharedService } from '../../common/shared-service';
@@ -85,15 +85,21 @@ import { formatCourtNumbers } from '../../common/utilities';
                 <div class="flex space-x-1">
                   <button
                     (click)="sharedService.markNoShow(player.id)"
-                    class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200"
+                    class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200 flex items-center space-x-1"
                   >
-                    No Show
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span>No Show</span>
                   </button>
                   <button
                     (click)="sharedService.removePlayer(player.id, 'registration')"
-                    class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded hover:bg-orange-200"
+                    class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded hover:bg-orange-200 flex items-center space-x-1"
                   >
-                    Remove
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    <span>Remove</span>
                   </button>
                 </div>
               </div>
@@ -137,8 +143,11 @@ import { formatCourtNumbers } from '../../common/utilities';
             </div>
             <button
               (click)="sharedService.unbanUser(bannedUser.userId)"
-              class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200"
+              class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200 flex items-center"
             >
+              <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
               Unban
             </button>
           </div>
@@ -150,4 +159,9 @@ import { formatCourtNumbers } from '../../common/utilities';
 export class AdminPanelComponent {
   formatCourtNumbers = formatCourtNumbers;
   sharedService = inject(SharedService);
+  constructor() {
+    effect(() => {
+      this.sharedService.courts();
+    });
+  }
 }

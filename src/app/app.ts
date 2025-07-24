@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { User } from '../common/interface';
@@ -14,6 +14,7 @@ import { SessionViewComponent } from './components/sessionView';
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
     AuthComponent,
@@ -48,7 +49,7 @@ import { SessionViewComponent } from './components/sessionView';
           [activeView]="activeView()"
           [isAdmin]="sharedService.isAdmin()"
           (logout)="sharedService.logout()"
-          (viewChange)="activeView.set($event)">
+          (viewChange)="activeView.set($event); cdr.detectChanges()">
         </app-navigation>
 
         <div class="max-w-6xl mx-auto p-4 pb-8">
@@ -69,11 +70,14 @@ import { SessionViewComponent } from './components/sessionView';
   `
 })
 export class AppComponent {
-
+  cdr = inject(ChangeDetectorRef);
   activeView = signal<'session' | 'players' | 'faq' | 'admin'>('session');
   sharedService = inject(SharedService);
 
   handleLogin(user: User) {
     this.sharedService.login(user);
+    // Ensure we're on the session view after login
+    this.activeView.set('session');
+    this.cdr.detectChanges();
   }
 }

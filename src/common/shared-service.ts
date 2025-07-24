@@ -8,6 +8,7 @@ import { getNextTuesday } from './utilities';
   providedIn: 'root'
 })
 export class SharedService {
+
   // Initial data
   private initialRegistrations: Registration[] = [
     { ...mockUsers[0], registeredAt: new Date() },
@@ -15,18 +16,18 @@ export class SharedService {
     { ...mockUsers[2], registeredAt: new Date() },
     { ...mockUsers[3], registeredAt: new Date() },
     { ...mockUsers[4], registeredAt: new Date() },
-    { ...mockUsers[5], registeredAt: new Date() },
-    { ...mockUsers[6], registeredAt: new Date() },
-    { ...mockUsers[7], registeredAt: new Date() },
-    { ...mockUsers[8], registeredAt: new Date() },
-    { ...mockUsers[9], registeredAt: new Date() }
+    // { ...mockUsers[5], registeredAt: new Date() },
+    // { ...mockUsers[6], registeredAt: new Date() },
+    // { ...mockUsers[7], registeredAt: new Date() },
+    // { ...mockUsers[8], registeredAt: new Date() },
+    // { ...mockUsers[9], registeredAt: new Date() }
   ];
 
   private initialWaitlist: WaitlistEntry[] = [
-    { ...mockUsers[10], waitlistedAt: new Date() },
-    { ...mockUsers[11], waitlistedAt: new Date() },
-    { ...mockUsers[12], waitlistedAt: new Date() },
-    { ...mockUsers[13], waitlistedAt: new Date() }
+    // { ...mockUsers[10], waitlistedAt: new Date() },
+    // { ...mockUsers[11], waitlistedAt: new Date() },
+    // { ...mockUsers[12], waitlistedAt: new Date() },
+    // { ...mockUsers[13], waitlistedAt: new Date() }
   ];
 
   // State signals
@@ -81,6 +82,11 @@ export class SharedService {
   // Auth methods
   login(user: User) {
     this.currentUser.set(user);
+    // Ensure session date is set
+    if (!this.sessionDate()) {
+      const nextTuesday = getNextTuesday();
+      this.sessionDate.set(nextTuesday.toLocaleDateString());
+    }
   }
 
   logout() {
@@ -216,10 +222,14 @@ export class SharedService {
 
   increaseCourts() {
     this.courts.update(count => count + 1);
+    this.registrations.set([]);
+    this.waitlist.set([]);
   }
 
   decreaseCourts() {
     this.courts.update(count => Math.max(0, count - 1));
+    this.registrations.set([]);
+    this.waitlist.set([]);
   }
 
   toggleSession() {

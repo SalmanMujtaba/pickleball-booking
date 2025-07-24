@@ -21,14 +21,7 @@ export const mockUsers: User[] = [
 export const initialRegistrations: Registration[] = [
   { ...mockUsers[0], registeredAt: new Date() },
   { ...mockUsers[1], registeredAt: new Date() },
-  { ...mockUsers[2], registeredAt: new Date() },
-  { ...mockUsers[3], registeredAt: new Date() },
-  { ...mockUsers[4], registeredAt: new Date() },
-  { ...mockUsers[5], registeredAt: new Date() },
-  { ...mockUsers[6], registeredAt: new Date() },
-  { ...mockUsers[7], registeredAt: new Date() },
-  { ...mockUsers[8], registeredAt: new Date() },
-  { ...mockUsers[9], registeredAt: new Date() }
+  { ...mockUsers[2], registeredAt: new Date() }
 ];
 
 export const initialWaitlist: WaitlistEntry[] = [
